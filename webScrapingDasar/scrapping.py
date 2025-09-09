@@ -39,59 +39,22 @@ review_blocks = driver.find_elements(By.CSS_SELECTOR, 'article[class*="user-revi
 print(f"Total review ditemukan: {len(review_blocks)}")
 
 data = []
+comments_list = []
 
 for review in review_blocks:
-    try:
-        title = driver.find_element(By.CSS_SELECTOR, 'h2[data-testid="subtitle"]').text.strip()
-    except:
-        title = '-'
-    
-    try:
-        user = review.find_element(By.CSS_SELECTOR, 'a[data-testid="author-link"]').text.strip()
-    except:
-        user = '-'
-    
-    try:
-        tanggal = review.find_element(By.CSS_SELECTOR, 'li.review-date').text.strip()
-    except:
-        tanggal = '-'
-    
-    try:
-        rating = review.find_element(By.CSS_SELECTOR, 'span.ipc-rating-star--rating').text.strip()
-    except:
-        rating = '-'
-
-    try:
-        like = review.find_element(By.CSS_SELECTOR, 'span.ipc-voting__label__count--up').text.strip()
-    except:
-        like = '-'
-
-    try:
-        dislike = review.find_element(By.CSS_SELECTOR, 'span.ipc-voting__label__count--down').text.strip()
-    except:
-        dislike = '-'
-
-    try:
-        title_comment = review.find_element(By.CSS_SELECTOR, 'h3.ipc-title__text.ipc-title__text--reduced').text.strip()
-    except:
-        title_comment = '-'
-    
     try:
         comment = review.find_element(By.CSS_SELECTOR, 'div[data-testid="review-content"]').text.strip()
     except:
         try:
             comment = review.find_element(By.CSS_SELECTOR, 'div.ipc-html-content-inner-div').text.strip()
-        except:  
-            comment = '-'
+        except:
+            comment = '-'  # fallback jika tidak ditemukan
+    
+    # hanya simpan jika comment tidak kosong dan bukan '-'
+    if comment or comment != '-':
+        comments_list.append(comment)
 
     data.append({
-        'Nama Reviewer': user,
-        'Tanggal': tanggal,
-        'Judul Review': title,
-        'Rating': rating,
-        'Like' : like,
-        'Dislke' : dislike,
-        'Title Komentar' : title_comment,
         'Komentar': comment
     })
 
